@@ -10,7 +10,8 @@ from PIL import Image
 
 @app.route('/')
 def homepage():
-    return render_template('homepage.html')
+    posts = Post.query.order_by(Post.id.desc())
+    return render_template('homepage.html', posts=posts)
 
 
 @app.route('/contato')
