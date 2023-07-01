@@ -1,8 +1,8 @@
 from flask import render_template, redirect, flash, url_for, request
 from comunidadeimpressionadora import app, database, bcrypt, login_manager
 from googletrans import Translator
-from comunidadeimpressionadora.forms import FormLogin, FormEditarPerfil, FormCriarConta
-from comunidadeimpressionadora.models import Usuario
+from comunidadeimpressionadora.forms import FormLogin, FormEditarPerfil, FormCriarConta, FormCriarPost
+from comunidadeimpressionadora.models import Usuario, Post
 from flask_login import login_user, logout_user, current_user, login_required
 import os
 from PIL import Image
@@ -67,10 +67,17 @@ def perfil():
     return render_template('perfil.html', foto_perfil=foto_perfil)
 
 
-@app.route('/post/criar')
+@app.route('/post/criar', methods=['GET', 'POST'])
 @login_required
 def criar_post():
-    return render_template('criarpost.html')
+    form_criarpost = FormCriarPost()
+    if form_criarpost.validate_on_submit():
+        post = Post(titulo=form_criarpost.titulo.data, corpo=form_criarpost.corpo.data, Autor=current_user)
+        database.session.add(post)
+        database.session.commit()
+        flash(f'Post criado com sucesso', 'alert-success')
+        return redirect(url_for('homepage'))
+    return render_template('criarpost.html', form_criarpost=form_criarpost)
 
 
 def salvar_imagem(imagem):

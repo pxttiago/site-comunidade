@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from comunidadeimpressionadora.models import Usuario
 from flask_login import current_user
@@ -46,15 +46,21 @@ class FormEditarPerfil(FlaskForm):
     curso_vba = BooleanField('VBA Impressionador')
     curso_sql = BooleanField('SQL Impressionador')
     submit_editarperfil = SubmitField('Salvar')
-    
+
     def validate_username(self, username):
         if current_user.username != username.data:
             usuario = Usuario.query.filter_by(username=username.data).first()
             if usuario:
                 raise ValidationError('Nome de usuário já cadastrado. Cadastre um nome de usuário diferente.')
-    
+
     def validate_email(self, email):
         if current_user.email != email.data:
             usuario = Usuario.query.filter_by(email=email.data).first()
             if usuario:
                 raise ValidationError('E-mail já cadastrado. Cadastre um novo e-mail.')
+
+
+class FormCriarPost(FlaskForm):
+    titulo = StringField('Assunto', validators=[DataRequired(), Length(2, 140)])
+    corpo = TextAreaField('Escreva seu post aqui', validators=[DataRequired()])
+    submit_post = SubmitField('Criar post')
