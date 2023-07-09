@@ -20,7 +20,13 @@
                 </div>
             </div>
             <div class="column col-9 ps-4">
-                <h3>{{ post.titulo }}</h3>
+                <h3>{{ post.titulo }}
+                <small class="text-muted" style="font-size: 15px"> - Data de criação: {{ post.data_criacao.strftime('%d/%m/%Y') }}
+                {% if form_editarpost %}
+                    - <a href="#form_editarpost">Editar</a> / <a class="text-danger" href="#" data-bs-toggle="modal" data-bs-target="#ExcluirPost">Excluir</a>
+                {% endif %}
+                </small>
+                </h3>
                 <p>{{ post.corpo }}</p>
             </div>
         </div>
@@ -30,7 +36,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <form method="POST" action="" class="border p-4 mt-2">
+                <form method="POST" action="" id="form_editarpost" class="border p-4 mt-2">
                     {{ form_editarpost.csrf_token }}
                     <legend>Editar Post</legend>
                     <fieldset>
@@ -67,5 +73,26 @@
         </div>
     </div>
 {% endif %}
+
+<!-- Modal -->
+<div class="modal fade" id="ExcluirPost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Excluir post</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Deseja realmente excluir este post? (Esta ação não pode ser revertida)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="POST" action="{{ url_for('excluir_post', post_id=post.id) }}">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+  </div>
+</div>
 
 {% endblock %}
