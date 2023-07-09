@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row border mt-4 p-3 meupost">
+            <div class="column col-3">
+                <div class="row flex-shrink-0 mb-1 justify-content-center">
+                    <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(post.Autor.foto_perfil)) }}"
+                         alt="Generic placeholder image" class="img-fluid"
+                         style="width: 200px">
+                </div>
+                <div class="text-center">
+                    <strong>{{ post.Autor.username }}</strong>
+                    <p>{{ post.Autor.email }}</p>
+                </div>
+                <div class="row">
+                    {% for curso in post.Autor.cursos.split(';') %}
+                        <button type="button" class="btn btn-secondary mt-2" disabled>{{ curso }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="column col-9 ps-4">
+                <h3>{{ post.titulo }}</h3>
+                <p>{{ post.corpo }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
